@@ -1,0 +1,62 @@
+
+
+group = normal;
+% phaseN = zeros(1,600);
+% for patient = 1:size(group,2)    
+%     phaseN = phaseN+PhaseDiff(epoch, 200, [35 40], 2, 3, odors, 0);
+% end
+% phaseN = phaseN/size(group,2);
+% 
+% group = normal;
+% phaseD = zeros(1,600);
+% for patient = 1:size(group,2)    
+%     phaseD = phaseD+PhaseDiff(epoch, 200, [35 40], 2, 3, odors, 0);
+% end
+% phaseD = phaseD/size(group,2);
+figure
+subplot(2,2,1);
+polarhistogram(double(phaseCalc(normal(1))))
+title('patient 15 Normal frequent')
+subplot(2,2,2);
+polarhistogram(double(phaseCalc(AD(1))))
+title('patient 13 AD frequent')
+
+% subplot(2,2,3);
+% polarhistogram(double(phaseN))
+% title('mean Normal frequent')
+% subplot(2,2,4);
+% polarhistogram(double(phaseD))
+% title('mean AD frequent')
+
+double(phaseCalc(AD(1)))
+
+function phDif = phaseCalc(patientEEG)
+    samples = 600;
+    SR = 200; 
+    epoch = patientEEG.epoch;
+    odors = patientEEG.odor;
+    trials =  size(epoch,3);
+    filterRange = [35 40];
+    filterData = filter(fir1(50, 2/SR*filterRange),1, epoch, [], 2); %fir1 -> Designs filter    
+
+    hilberted(1,:,:) = hilbert(filterData(2, :, :)); %Fz
+    hilberted(2,:,:) = hilbert(filterData(3, :, :)); %Cz
+    
+    nTrial = 0;
+    phDif = 0;
+    
+    for trial = 1:trials
+        if odors(trial)== 0
+            nTrial = nTrial+1;
+            ph(nTrial,:,:) = angle(hilberted(1,:,trial).*conj(hilberted(2,:,trial)));
+            %phDif = phDif + ph;
+            
+        end
+    end
+
+    phDif = mean (phDif ,3);
+
+    
+end
+
+

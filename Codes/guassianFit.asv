@@ -1,0 +1,21 @@
+x_values = -0.1:0.01:1.2;
+figure
+subplot(2,2,1)
+NFnorm = fitdist ( NRplv' ,'Normal');
+plot(x_values,pdf(NFnorm,x_values));
+title("Normal Frequent");
+
+subplot(2,2,2)
+NRnorm = fitdist ( normalRarePLV' ,'Normal');
+plot(x_values,pdf(NRnorm,x_values));
+title("Normal Rare");
+
+subplot(2,2,3)
+ADFnorm = fitdist ( ADFrequentPLV' ,'Normal');
+plot(x_values,pdf(ADFnorm,x_values));
+title("AD Frequent");
+
+subplot(2,2,4)
+ADRnorm = fitdist ( ADRarePLV' ,'Normal');
+plot(x_values,pdf(ADRnorm,x_values));
+title("AD Rare");
